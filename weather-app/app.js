@@ -7,15 +7,15 @@ const location = process.argv[2]
 if (!location) {
     return console.log('No location argument provide')
 } else {
-    geocode(location, (error, data) => {
+    geocode(location, (error, {latitude, longtitude, location} = {}) => {
         if (error) {
             return console.log(error)
         }
-        forecast(data.latitude, data.longtitude, (error, forecastData) => {
+        forecast(latitude, longtitude, (error, forecastData) => {
             if (error) {
                 return console.log(error)
             }
-            console.log(data.location)
+            console.log(location)
             console.log(forecastData)
         })    
     })
