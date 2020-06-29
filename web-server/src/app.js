@@ -9,11 +9,10 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 const viewsPath = path.join(__dirname, '../templates/views')
 const partialsPath = path.join(__dirname, '../templates/partials')
 
-hbs.registerPartials(partialsPath)
-
 // Setup handlebars engine and views location
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
 
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
@@ -21,21 +20,41 @@ app.use(express.static(publicDirectoryPath))
 app.get('', (req, res) => {
     res.render('index', {
         title: 'Weather',
-        name: 'Andrew Mead'
+        name: 'Raman Hliabovich'
     })
 })
 
 app.get('/about', (req, res) => {
     res.render('about', {
         title: 'About Me',
-        name: 'Andrew Mead'
+        name: 'Raman Hliabovich'
     })
 })
 
 app.get('/help', (req, res) => {
     res.render('help', {
         title: 'Help',
-        helpText: 'This is some helpful text.'
+        helpText: 'This is some helpful text.',
+        name: 'Raman Hliabovich'
+
+    })
+})
+
+app.get('/help/*', (req, res) => {
+    res.render('404', {
+        title: 'Help',
+        errorMessage: 'Article not found',
+        name: 'Raman Hliabovich'
+
+    })
+})
+
+app.get('*', (req, res) => {
+    res.render('404', {
+        title: '404',
+        errorMessage: 'Page not found',
+        name: 'Raman Hliabovich'
+
     })
 })
 
