@@ -1,6 +1,8 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
 const app = express()
 
@@ -40,6 +42,30 @@ app.get('/help', (req, res) => {
     })
 })
 
+app.get('/weather', (req, res) => {
+    if (!req.query.address) {
+        return res.render({
+            error: "Address is not provided"
+        })
+    }
+
+    geocode(req.query.address, (error, {latitude, longtitude, location} = {}) => {
+        if (error) {
+            return res.send({error})
+        }
+        forecast(latitude, longtitude, (error, forecastData) => {
+            if (error) {
+                return res.send({error})
+            }
+            res.send({
+                forecast: forecastData,
+                location: location,
+                address: req.query.address
+            })
+        })    
+    })
+})
+
 app.get('/help/*', (req, res) => {
     res.render('404', {
         title: 'Help',
@@ -55,13 +81,6 @@ app.get('*', (req, res) => {
         errorMessage: 'Page not found',
         name: 'Raman Hliabovich'
 
-    })
-})
-
-app.get('/weather', (req, res) => {
-    res.send({
-        forecast: 'It is snowing',
-        location: 'Philadelphia'
     })
 })
 
